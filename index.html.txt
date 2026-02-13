@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unkhown Day</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',sans-serif;background:radial-gradient(circle at top,#1a0026,#000);min-height:100vh;display:flex;justify-content:center;align-items:center;color:#fff;text-align:center;overflow:hidden;}
+.page{display:none;padding:30px;max-width:720px;animation:fade 1s ease;position:relative;}
+.page.active{display:block}
+h1,h2{margin-bottom:20px;text-shadow:0 0 10px #ff2fdc,0 0 25px #ff2fdc;}
+button{padding:14px 28px;font-size:16px;border:none;border-radius:40px;margin:12px;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;}
+button span{margin-left:6px;}
+.yes{background:#00ffb3;color:#000;box-shadow:0 0 20px #00ffb3;}
+.no{background:#ff003c;color:#fff;box-shadow:0 0 20px #ff003c;}
+.next{background:#00b0ff;color:#000;box-shadow:0 0 20px #00b0ff;}
+button:hover{transform:scale(1.08);}
+.heart{font-size:70px;animation:pulse 1.2s infinite;position:absolute;}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes fade{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+.firework{position:absolute;font-size:22px;animation:fall 2.5s linear infinite;opacity:.8;}
+@keyframes fall{from{top:-10%}to{top:110%}}
+.type{font-size:16px;line-height:1.7;text-shadow:0 0 6px #ff5fd2;}
+footer{position:fixed;bottom:5px;width:100%;font-size:10px;color:#888;text-align:center;}
+.music-control{position:fixed;top:5px;right:10px;font-size:14px;padding:8px 12px;border-radius:20px;background:#000;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:4px;}
+.music-control:hover{background:#ff2fdc;color:#000;}
+#passwordDiv input{padding:10px 15px;border-radius:20px;border:none;margin-right:10px;} 
+#passwordDiv button{padding:10px 15px;border-radius:20px;border:none;cursor:pointer;}
+.name-box{padding:20px;border-radius:16px;background:linear-gradient(135deg,#ff2fdc,#7b2cff);box-shadow:0 0 15px #ff2fdc;cursor:pointer;font-size:18px;font-weight:600;transition:.4s;position:relative;overflow:hidden;}
+.name-box.open{background:#000;color:#ffb6f0;box-shadow:0 0 25px #ff2fdc;transform:scale(1.05);}
+.name-box.last-open{animation:glow 1.5s infinite;}
+@keyframes glow{0%{box-shadow:0 0 15px #ff2fdc;}50%{box-shadow:0 0 40px #ff9df5;}100%{box-shadow:0 0 15px #ff2fdc;}}
+</style>
+</head>
+<body><!-- Password Page --><div class="page active" id="passwordPage">
+  <h2>Enter Password to Enter</h2>
+  <div id="passwordDiv">
+    <input type="password" id="passwordInput" placeholder="Enter Password">
+    <button onclick="checkPassword()">Enter</button>
+  </div>
+</div><!-- Page 1 --><div class="page" id="page1">
+    <h1>Unkhown Day<br>to<br>Nilima Sarker Bristy</h1>
+    <button class="next" onclick="goToPage(3)">Enter</button>
+</div><!-- Page 3: Tap Boxes --><div class="page" id="page3">
+    <h2>Tap on box and go to Next</h2>
+    <div id="boxes" style="display:grid;grid-template-columns:repeat(2,1fr);gap:15px;max-width:400px;margin:0 auto;">
+        <div class="name-box" data-text="Pookii 🥺🎀">Tap</div>
+        <div class="name-box" data-text="Honey 🍒">Tap</div>
+        <div class="name-box" data-text="Sweetheart 💗😩">Tap</div>
+        <div class="name-box" data-text="Flower 🫶🌷">Tap</div>
+        <div class="name-box" data-text="Pahkii 🕊️🌙">Tap</div>
+        <div class="name-box" data-text="Citti 🐱💫">Tap</div>
+        <div class="name-box" data-text="Sundori 💙🌕">Tap</div>
+    </div>
+    <button class="next" id="page3Next" style="display:none" onclick="goToPage(4)">Next</button>
+</div><!-- Page 4 --><div class="page" id="page4">
+    <h2 id="page4Text">I hate you and also this song but amar mon akhono valobashe</h2>
+    <button class="music-control" id="music4Btn" onclick="toggleMusic('music4')">🎵<span>Music OFF</span></button>
+    <audio id="music4" loop>
+      <source src="song4.mp3" type="audio/mpeg">
+    </audio>
+    <button class="next" onclick="goToPage(5)">Next</button>
+</div><!-- Page 5 --><div class="page" id="page5">
+    <h2>Love Box</h2>
+    <div id="loveBox" style="padding:20px;border:2px dashed #ff2fdc;cursor:pointer;">Tap Here</div>
+    <div id="loveText" class="type"></div>
+    <button class="next" onclick="goToPage(6)">Next</button>
+</div><!-- Page 6 --><div class="page" id="page6">
+    <h2>Best of luck and enjoy your fucking life</h2>
+    <button class="music-control" id="music6Btn" onclick="toggleMusic('music6')">🎵<span>Music OFF</span></button>
+    <audio id="music6" loop>
+      <source src="song6.mp3" type="audio/mpeg">
+    </audio>
+</div><footer>Developed By SHUBONGKAR SARKER</footer><script>
+// Global I Love You effect
+function heartsEffect(){
+  let heart=document.createElement('div');
+  heart.className='firework';
+  heart.innerText='❤️';
+  heart.style.left=Math.random()*100+'%';
+  heart.style.animationDuration=2+Math.random()*2+'s';
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),4000);
+}
+setInterval(heartsEffect,500);
+
+// Audio elements
+const allMusic = [document.getElementById('music4'), document.getElementById('music6')];
+
+// Enable music after first user interaction
+function enableMusic(){
+  allMusic.forEach(m=>{
+    m.play().catch(()=>{});
+  });
+}
+
+// Password
+function checkPassword(){
+  let val=document.getElementById('passwordInput').value;
+  if(val==='BABY') {
+    goToPage(1);
+  } else alert('Wrong Password!');
+}
+
+// Music toggle
+function toggleMusic(id){
+  let m=document.getElementById(id);
+  let btn=document.getElementById(id+'Btn');
+  if(m.paused){
+    m.play().catch(()=>{});
+    btn.innerHTML='🎵<span>Music ON</span>';
+  } else {
+    m.pause();
+    btn.innerHTML='🎵<span>Music OFF</span>';
+  }
+}
+
+// Smooth Page Transition
+function goToPage(n){
+  document.querySelectorAll('.page').forEach(p=>{
+    p.style.opacity=0;
+    p.style.transform='scale(0.95)';
+    setTimeout(()=>p.classList.remove('active'),300);
+  });
+  setTimeout(()=>{
+    const pg=document.getElementById('page'+n);
+    pg.classList.add('active');
+    pg.style.opacity=1;
+    pg.style.transform='scale(1)';
+  },300);
+  // Enable music after any page tap
+  enableMusic();
+}
+
+// Page3 Tap box logic
+let openedCount=0;
+document.querySelectorAll('.name-box').forEach((box,idx,arr)=>{
+  box.onclick=()=>{
+    enableMusic();
+    if(!box.classList.contains('open')){
+      box.classList.add('open');
+      box.innerText=box.dataset.text;
+      openedCount++;
+      if(openedCount===arr.length){
+        document.getElementById('page3Next').style.display='inline-block';
+      }
+    }
+  }
+});
+
+// Page5 Love box tap
+const loveMessage=`Well.This is my day 361 and still tumi amar kothao to theke gecho.
+Akhon tumar nam sunlei kn jani sojjo hoi na.
+life e kaoke ato love korini except you.
+she kotha vablei nijeke hate kori.
+Chi amar mon kototai Rochihin.
+
+Sorry to Say tumi akhon jodi kono pular sathe suiyeo thako I Don't fucking care.`;
+document.getElementById('loveBox').onclick=()=>{
+  document.getElementById('loveText').innerHTML=loveMessage.replace(/\n/g,'<br>');
+}
+</script></body>
+</html>
